@@ -453,6 +453,7 @@ class Message extends Base {
         const result = await this.client.pupPage.evaluate(async (msgId) => {
             const msg = window.Store.Msg.get(msgId);
             if (!msg || !msg.mediaData) {
+                console.info('!msg.mediaData');
                 return undefined;
             }
             if (msg.mediaData.mediaStage != 'RESOLVED') {
@@ -463,8 +464,9 @@ class Message extends Base {
                 });
             }
 
-            if (msg.mediaData.mediaStage.includes('ERROR') || msg.mediaData.mediaStage === 'FETCHING') {
+            if (msg.mediaData.mediaStage.includes('ERROR') ) {
                 // media could not be downloaded
+                console.info('mediaStage includes ERROR');
                 return undefined;
             }
 
@@ -493,7 +495,10 @@ class Message extends Base {
             }
         }, this.id._serialized);
 
-        if (!result) return undefined;
+        if (!result) {
+            console.info('!result');
+            return undefined;
+        }
         return new MessageMedia(result.mimetype, result.data, result.filename, result.filesize);
     }
 
